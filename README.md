@@ -1,6 +1,6 @@
 # Real-time Malicious TLS Traffic Dataset Collector for T-Pot CE
 
-This repository implements the data-collection stage of the research project **“Real-time Malicious TLS Traffic Detection using Machine Learning Classifiers.”** It integrates with Suricata in T-Pot CE and collects complete TLS flows for later feature extraction, labeling, and machine-learning experiments—without decrypting TLS payloads.
+This repository implements the data-collection stage of the research project **“Real-time Malicious TLS Traffic Detection using Machine Learning Classifiers.”** It integrates with Suricata in T-Pot CE and collects complete TLS flows for later feature extraction, labeling, and machine-learning experiments.
 
 The collector is designed to reduce disk usage. It keeps a bounded temporary TCP packet buffer and permanently saves only flows that Suricata identifies as TLS.
 
@@ -27,7 +27,7 @@ Network traffic --------> Suricata                     |
                                       timestamped dataset session
 ```
 
-The packet buffer begins recording before Suricata reports an event. When a TLS EVE event arrives, the controller uses its bidirectional five-tuple—source and destination addresses, ports, and TCP protocol—to recover the complete flow from the buffer. This includes packets that preceded TLS recognition, such as the TCP `SYN`, `SYN-ACK`, and TLS handshake.
+The packet buffer begins recording before Suricata reports an event. When a TLS EVE event arrives, the controller uses its bidirectional five-tuple (source and destination addresses, ports, and TCP protocol) to recover the complete flow from the buffer. This includes packets that preceded TLS recognition, such as the TCP `SYN`, `SYN-ACK`, and TLS handshake.
 
 Suricata's native conditional `tag` capture was also tested. It captured packets only after TLS detection and therefore did not preserve the beginning of the connection. The bounded-buffer controller is the recommended dataset workflow.
 
