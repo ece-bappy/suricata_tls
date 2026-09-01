@@ -80,8 +80,8 @@ No third-party Python package or Scapy installation is required. The scripts sea
 ## Installation
 
 ```bash
-git clone <repository-url>
-cd suricata_plug
+git clone https://github.com/ece-bappy/suricata_tls.git
+cd suricata_tls
 chmod +x configure_suricata.sh tls_capture_controller.py
 ```
 
