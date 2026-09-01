@@ -251,36 +251,6 @@ The temporary buffer must include non-TLS TCP because the protocol is unknown be
 
 With the defaults, temporary storage is limited to approximately `8 × 25 MB = 200 MB`. Permanent storage contains one PCAP per confirmed TLS flow plus two compact JSONL files per session; it does not store permanent PCAPs for unrelated TCP flows.
 
-## Limitations and research considerations
-
-- Background system and application TLS is collected alongside experiment traffic.
-- The controller does not label flows malicious or benign; labels require experiment ground truth.
-- Permanent sessions are not automatically deleted or quota-limited.
-- A five-tuple can theoretically be reused; retain session time and Suricata flow ID downstream.
-- Immediate shutdown can cancel flows still waiting for post-event packets.
-- PCAPs contain network metadata and encrypted payloads and require appropriate privacy and retention controls.
-- The current implementation has no classifier, real-time filter, dashboard, database, or systemd service.
-
-## Problems resolved
-
-| Problem | Resolution |
-|---|---|
-| Broad YAML replacements damaged unrelated outputs | Restrict modifications to bounded YAML sections |
-| Backups could contain modified YAML | Restore from the canonical T-Pot checkout |
-| Machine-specific paths prevented reuse | Automatically discover T-Pot and socket paths |
-| Native conditional capture missed initial packets | Use a rotating pre-event buffer and flow extraction |
-| Per-flow JSON created unnecessary clutter | Consolidate events and manifests into session JSONL files |
-| Dataset runs were difficult to track | Add timestamped sessions and `master.json` |
-| Shutdown waited for queued work | Cancel queued work and post-event waits on `Ctrl+C` |
-
-## Project files
-
-| File | Purpose |
-|---|---|
-| `configure_suricata.sh` | Configure EVE, optional conditional PCAP, and restoration |
-| `tls_capture_controller.py` | Collect complete TLS flows into timestamped sessions |
-| `README.md` | Implementation report and operating guide |
-
 ## Current status
 
 The data-collection prototype is implemented and live-tested. It captures pre-event and post-event packets for Suricata-identified TLS flows, verifies complete TCP handshakes, bounds temporary storage, organizes experiments into indexed sessions, and stops with an immediate summary. Dataset labeling, feature engineering, model training, evaluation, and real-time filtering remain future work.
