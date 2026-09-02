@@ -4,12 +4,6 @@ This repository implements the data-collection stage of the research project **â
 
 The collector is designed to reduce disk usage. It keeps a bounded temporary TCP packet buffer and permanently saves only flows that Suricata identifies as TLS.
 
-## Research objective
-
-The wider research platform will passively inspect encrypted traffic at a network edge, derive observable TLS and flow characteristics, and use machine-learning classifiers to distinguish malicious and benign traffic. This implementation focuses only on reliable dataset acquisition; classification and traffic filtering are future stages.
-
-The implementation does not decrypt TLS, alter payloads, or perform man-in-the-middle interception.
-
 ## System design
 
 ```text
@@ -39,7 +33,7 @@ This script prepares Suricata for dataset collection. It:
 
 - Finds T-Pot automatically instead of using a machine-specific path.
 - Changes EVE to `unix_stream` so events are delivered in real time.
-- Enables only the requested EVE event types; the recommended dataset setting is `tls`.
+- Enables only the requested EVE event types.
 - Changes only the relevant YAML sections instead of globally replacing keys.
 - Finds and restarts the active Suricata container.
 - Displays the current EVE and PCAP configuration with `--show`.
@@ -70,8 +64,7 @@ Its responsibilities are:
 
 ## Requirements
 
-- A T-Pot CE Git installation, normally at `$HOME/tpotce`
-- A running Suricata Docker container named `suricata`
+- A T-Pot CE Git installation, normally at `$HOME/tpotce`. Follow the official guide at [here](https://github.com/telekom-security/tpotce)
 - Bash, Python 3.10 or newer, and `tcpdump`
 - Root privileges for raw capture and the T-Pot socket directory
 
@@ -126,8 +119,6 @@ For a simple functional test from another terminal:
 ```bash
 for i in {1..100}; do curl -s -o /dev/null https://google.com; done
 ```
-
-This traffic is only a collection test and should not be treated as malicious/benign training ground truth. The honeypot experiment must supply reliable labels for the final dataset.
 
 ### 3. Stop and review the session
 
@@ -257,6 +248,6 @@ The data-collection prototype is implemented and live-tested. It captures pre-ev
 
 ## References
 
-- [T-Pot CE](https://github.com/telekom-security/tpotce)
-- [Suricata EVE JSON output](https://docs.suricata.io/en/latest/output/eve/eve-json-output.html)
-- [Suricata PCAP logging](https://docs.suricata.io/en/latest/output/pcap-log.html)
+ 1 [T-Pot CE](https://github.com/telekom-security/tpotce)
+ 2 [Suricata EVE JSON output](https://docs.suricata.io/en/latest/output/eve/eve-json-output.html)
+ 3 [Suricata PCAP](https://docs.suricata.io/en/latest/output/eve/eve-json-format.html#pcap-fields)
